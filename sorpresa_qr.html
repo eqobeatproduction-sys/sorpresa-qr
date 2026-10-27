@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7c3aed">
+  <title>Una sorpresa per te 🎁</title>
+  <style>
+    :root { --ink:#24133f; --purple:#7c3aed; --pink:#ff5da2; --yellow:#ffd166; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 22px; font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--ink); overflow-x: hidden;
+      background: radial-gradient(circle at top left, #ffe0f0, transparent 40%),
+                  radial-gradient(circle at bottom right, #d9f7ff, transparent 45%),
+                  linear-gradient(135deg, #fff8df, #f0e7ff);
+    }
+    .card {
+      width: min(100%, 460px); background: rgba(255,255,255,.88);
+      border: 2px solid rgba(255,255,255,.9); border-radius: 28px;
+      padding: 28px 22px; text-align: center; box-shadow: 0 20px 60px #4b27751c;
+      position: relative; z-index: 2;
+    }
+    .eyebrow { text-transform: uppercase; letter-spacing: .16em; font-size: .72rem; font-weight: 800; color: var(--purple); }
+    h1 { font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; margin: 12px 0; }
+    .subtitle { line-height: 1.55; color: #5e5271; margin: 0 auto 20px; max-width: 32ch; }
+    .gift { font-size: 5.5rem; display: inline-block; filter: drop-shadow(0 8px 5px #00000012); animation: bob 1.8s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-9px) rotate(3deg); } }
+    button {
+      border: 0; border-radius: 999px; padding: 14px 22px; font: inherit;
+      font-weight: 800; cursor: pointer; min-height: 48px; transition: transform .15s, filter .15s;
+    }
+    button:active { transform: scale(.96); }
+    .primary { background: linear-gradient(135deg, var(--purple), #a855f7); color: white; box-shadow: 0 8px 18px #7c3aed35; }
+    .secondary { background: #f0e7ff; color: #5924a8; margin-top: 10px; }
+    #message { display:none; background:#fff4c7; border:2px dashed #f4b942; padding:18px; border-radius:18px; margin:18px 0 4px; animation: pop .4s cubic-bezier(.2,1.6,.4,1); }
+    #message.show { display:block; }
+    #message h2 { margin: 0 0 8px; }
+    #message p { margin: 0; line-height: 1.5; }
+    @keyframes pop { from { opacity:0; transform:scale(.75) rotate(-3deg); } to { opacity:1; transform:scale(1) rotate(0); } }
+    .tiny { color:#887c98; font-size:.78rem; margin-top:20px; }
+    .confetti { position:fixed; top:-20px; z-index:5; pointer-events:none; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(800deg); opacity:.9; } }
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="eyebrow">Messaggio segreto 🤫</div>
+    <div class="gift" id="gift" aria-hidden="true">🎁</div>
+    <h1 id="title">Ehi, tu!</h1>
+    <p class="subtitle" id="subtitle">Hai scansionato questo QR code. Ora hai una missione molto importante.</p>
+    <button class="primary" id="openBtn">Clicca per scoprire 👀</button>
+
+    <section id="message" aria-live="polite">
+      <h2>🎉 VUOI FARE SESSO CON ME?</h2>
+      <p id="finalMessage">Saranno i 7 secondi più belli della tua vita!😎</p>
+    </section>
+
+    <button class="secondary hidden" id="againBtn">Rifallo, dai ↻</button>
+    <p class="tiny">Vietato dire di no ✨</p>
+  </main>
+
+  <script>
+    const openBtn = document.getElementById('openBtn');
+    const againBtn = document.getElementById('againBtn');
+    const message = document.getElementById('message');
+    const gift = document.getElementById('gift');
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    let opened = false;
+
+    function confetti() {
+      const emojis = ['🎉','✨','💜','⭐','😂','🎊','🪩'];
+      for (let i = 0; i < 42; i++) {
+        const bit = document.createElement('span');
+        bit.className = 'confetti';
+        bit.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        bit.style.left = Math.random() * 100 + 'vw';
+        bit.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+        bit.style.fontSize = (16 + Math.random() * 20) + 'px';
+        bit.style.animationDelay = (Math.random() * .45) + 's';
+        document.body.appendChild(bit);
+        setTimeout(() => bit.remove(), 5200);
+      }
+    }
+
+    openBtn.addEventListener('click', () => {
+      if (opened) return;
+      opened = true;
+      gift.textContent = '🥳';
+      title.textContent = 'Sorpresa sbloccata!';
+      subtitle.textContent = 'Rullo di tamburi, per favore… 🥁';
+      message.classList.add('show');
+      openBtn.classList.add('hidden');
+      againBtn.classList.remove('hidden');
+      confetti();
+    });
+
+    againBtn.addEventListener('click', () => {
+      opened = false;
+      gift.textContent = '🎁';
+      title.textContent = 'Ehi, tu!';
+      subtitle.textContent = 'Hai scansionato questo QR code. Ora hai una missione molto importante.';
+      message.classList.remove('show');
+      openBtn.classList.remove('hidden');
+      againBtn.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
